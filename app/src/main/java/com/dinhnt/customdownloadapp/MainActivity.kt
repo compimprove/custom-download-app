@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
         val uri = Uri.parse(url)
         val request = DownloadManager.Request(uri)
             .setTitle(fileDescription)
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE)
             .setDescription(getString(R.string.download_description))
         val downloadID =
             downloadManager.enqueue(request)

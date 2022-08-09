@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.dinhnt.customdownloadapp.DetailActivity
 import com.dinhnt.customdownloadapp.R
@@ -39,12 +40,20 @@ fun NotificationManager.sendFileDownloadNotification(
         .bigPicture(imageDownload)
         .bigLargeIcon(null)
 
-    val contentPendingIntent = PendingIntent.getActivity(
-        context,
-        NOTIFICATION_ID,
-        contentIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT
-    )
+    val contentPendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        PendingIntent.getActivity(
+            context,
+            NOTIFICATION_ID,
+            contentIntent,
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    } else {
+        PendingIntent.getActivity(
+            context,
+            NOTIFICATION_ID, contentIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+    }
 
     val builder = NotificationCompat.Builder(
         context,
@@ -55,7 +64,6 @@ fun NotificationManager.sendFileDownloadNotification(
         .setContentText(fileDownloadDescription)
         .setContentIntent(contentPendingIntent)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
-        .setStyle(bigPicStyle)
         .setAutoCancel(true)
         .addAction(
             R.drawable.ic_download_cloud,
